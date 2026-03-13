@@ -28,7 +28,7 @@ public class TaskController {
 //        return new ResponseEntity<>(taskService.saveTask(task), HttpStatus.CREATED);
 //    }
 
-    @GetMapping()
+    @GetMapping
     public List<Task> findAllTasks() { return taskService.findAllTasks(); }
 
     // ADD with Tests for: GetById, Put, Delete
