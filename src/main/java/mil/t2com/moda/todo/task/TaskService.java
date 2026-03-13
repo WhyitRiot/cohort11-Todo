@@ -17,6 +17,10 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
+    public Task findTaskById(Long id){
+        return taskRepository.getReferenceById(id);
+    }
+
     public List<Task> findAllTasks() {
         return taskRepository.findAll();
     }

@@ -77,13 +77,13 @@ public class TaskControllerIntegrationTest {
         mockMvc.perform(get("/api/v1/task"))
                 .andExpect(status().isOk())
                 //.andExpect(jsonPath("$.*"))
-                .andExpect(jsonPath("$[0].id").value(1L))
+                .andExpect(jsonPath("$[0].id").value(2L))
                 .andExpect(jsonPath("$[0].title").value("Learn Tdd"))
                 .andExpect(jsonPath("$[1].title").value("Practice Tdd"))
-                .andExpect(jsonPath("$[0].category.id").value(1L))
+                .andExpect(jsonPath("$[0].category.id").value(2L))
                 .andExpect(jsonPath("$[0].category.label").value("Normal"))
                 .andExpect(jsonPath("$[1].category.label").value("Important"))
-                .andExpect(jsonPath("$[1].id").value(2L));
+                .andExpect(jsonPath("$[1].id").value(3L));
     }
 
     @Test
@@ -92,9 +92,9 @@ public class TaskControllerIntegrationTest {
 
         mockMvc.perform(get("/api/v1/task/" + savedTask.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.title").value(""))
-                .andExpect(jsonPath("$.category.id").value(1L))
-                .andExpect(jsonPath("$.category.label").value("not started"));
+                .andExpect(jsonPath("$.id").value(4L))
+                .andExpect(jsonPath("$.title").value("Learn TDD"))
+                .andExpect(jsonPath("$.category.id").value(4L))
+                .andExpect(jsonPath("$.category.label").value("Started"));
     }
 }

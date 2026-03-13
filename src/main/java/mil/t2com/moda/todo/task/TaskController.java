@@ -34,6 +34,9 @@ public class TaskController {
     // ADD with Tests for: GetById, Put, Delete
 
     // Example
-    //@GetMapping("/{taskId}")
+    @GetMapping("/{taskId}")
+    public Task findTask(@PathVariable Long taskId){
+        return taskService.findTaskById(taskId);
+    }
 
 }
