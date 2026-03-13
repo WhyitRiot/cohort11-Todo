@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import tools.jackson.databind.ObjectMapper;
 
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -65,7 +66,7 @@ public class TaskControllerIntegrationTest {
         Task expectedTask = objectMapper.readValue(savedTask.getResponse().getContentAsString(), Task.class);
 
         assertEquals("application/json", expectType);
-        assertEquals(expectedTask.getTitle(), learnTdd.getTitle());
+        assertEquals(expectedTask.getTitle(), objectMapper.readValue(learnTddJson, Task.class).getTitle());
         assertEquals(expectedTask.getCategory().getLabel(), learnTdd.getCategory().getLabel());
     }
 
@@ -76,7 +77,7 @@ public class TaskControllerIntegrationTest {
 
         mockMvc.perform(get("/api/v1/task"))
                 .andExpect(status().isOk())
-                //.andExpect(jsonPath("$.*"))
+                .andExpect(jsonPath("$.*", hasSize(2)))
                 .andExpect(jsonPath("$[0].id").value(2L))
                 .andExpect(jsonPath("$[0].title").value("Learn Tdd"))
                 .andExpect(jsonPath("$[1].title").value("Practice Tdd"))
