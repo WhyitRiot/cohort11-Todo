@@ -38,7 +38,7 @@ bin/
 
 #### Database files ####
 .java-version
-/postgres-data/
+compose/postgres-data/
 .sql
 
 ### Environment Variables ###
