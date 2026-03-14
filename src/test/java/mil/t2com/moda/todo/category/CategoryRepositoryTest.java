@@ -31,4 +31,15 @@ class CategoryRepositoryTest {
         assertThat(result.get().getLabel()).isEqualTo(newCategory.getLabel());
         assertThat(result.get()).isEqualTo(newCategory);
     }
+
+    @Test
+    void shouldFindByLabel(){
+        Category newCategory = new Category("Important");
+        //newCategory.setId(2L);
+        categoryRepository.save(newCategory);
+        Optional<Category> result = categoryRepository.findByLabel(newCategory.getLabel());
+
+        assertThat(result.get().getLabel()).isEqualTo(newCategory.getLabel());
+        System.out.println();
+    }
 }

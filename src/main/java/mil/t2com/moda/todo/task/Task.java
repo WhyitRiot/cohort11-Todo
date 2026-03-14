@@ -8,12 +8,11 @@ public class Task {
     @Id
     @GeneratedValue
     private Long id;
-
     private String title;
     private String description;
     private Boolean isComplete;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 

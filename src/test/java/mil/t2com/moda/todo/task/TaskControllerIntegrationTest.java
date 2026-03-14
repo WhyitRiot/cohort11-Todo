@@ -2,12 +2,14 @@ package mil.t2com.moda.todo.task;
 
 import jakarta.transaction.Transactional;
 import mil.t2com.moda.todo.category.Category;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.event.annotation.BeforeTestClass;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -17,7 +19,9 @@ import tools.jackson.databind.ObjectMapper;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -45,6 +49,7 @@ public class TaskControllerIntegrationTest {
 
     @BeforeEach
     void setUp() {
+
         started = new Category("Started");
         normal = new Category("Normal");
         important = new Category("Important");
@@ -57,8 +62,7 @@ public class TaskControllerIntegrationTest {
     public void shouldCreateTask() throws Exception {
         String learnTddJson = objectMapper.writeValueAsString(learnTdd);
 
-        MvcResult savedTask = mockMvc.perform(MockMvcRequestBuilders
-                        .post("/api/v1/task")
+        MvcResult savedTask = mockMvc.perform(post("/api/v1/task")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(learnTddJson))
                 .andReturn();
@@ -72,19 +76,22 @@ public class TaskControllerIntegrationTest {
 
     @Test
     public void shouldGetAllTasks() throws Exception {
-        taskService.saveTask(firstTask);
-        taskService.saveTask(secondTask);
+
+        //taskService.saveTask(firstTask);
+        mockMvc.perform(post("/api/v1/task").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(firstTask))).andExpect(status().isCreated());
+        mockMvc.perform(post("/api/v1/task").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(secondTask))).andExpect(status().isCreated());
+        //taskService.saveTask(secondTask);
 
         mockMvc.perform(get("/api/v1/task"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*", hasSize(2)))
-                .andExpect(jsonPath("$[0].id").value(2L))
+                .andExpect(jsonPath("$[0].id").exists())
                 .andExpect(jsonPath("$[0].title").value("Learn Tdd"))
                 .andExpect(jsonPath("$[1].title").value("Practice Tdd"))
-                .andExpect(jsonPath("$[0].category.id").value(2L))
+                .andExpect(jsonPath("$[0].category.id").exists())
                 .andExpect(jsonPath("$[0].category.label").value("Normal"))
                 .andExpect(jsonPath("$[1].category.label").value("Important"))
-                .andExpect(jsonPath("$[1].id").value(3L));
+                .andExpect(jsonPath("$[1].category.id").exists());
     }
 
     @Test

@@ -1,6 +1,8 @@
 package mil.t2com.moda.todo.task;
 
+import jakarta.transaction.Transactional;
 import mil.t2com.moda.todo.category.Category;
+import mil.t2com.moda.todo.category.CategoryRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -9,12 +11,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 class TaskServiceTest {
 
     @Mock
     private TaskRepository taskRepository;
+
+    @Mock
+    private CategoryRepository categoryRepository;
 
     @InjectMocks
     TaskService taskService;
@@ -34,6 +38,8 @@ class TaskServiceTest {
 
         // Act
         when(taskRepository.save(newTask)).thenReturn(newTask);
+        when(categoryRepository.save(any(Category.class))).thenReturn(newCategory);
+        newCategory.setId(1L);
 
         Task result = taskService.saveTask(newTask);
 

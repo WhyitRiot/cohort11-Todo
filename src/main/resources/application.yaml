@@ -1,19 +1,19 @@
 spring:
   config:
-      import: optional:file:.env[.properties]
+      import: optional:file:environment.env[.properties]
   application:
     name: todo
-
   datasource:
     url: ${POSTGRES_URL}
     driver-class-name: org.postgresql.Driver
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
     show-sql: true
-
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
 server:
   port: 8080
