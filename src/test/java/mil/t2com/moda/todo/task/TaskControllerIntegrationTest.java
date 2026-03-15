@@ -2,6 +2,7 @@ package mil.t2com.moda.todo.task;
 
 import jakarta.transaction.Transactional;
 import mil.t2com.moda.todo.category.Category;
+import org.hibernate.annotations.processing.SQL;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.event.annotation.BeforeTestClass;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -28,6 +30,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Transactional
 @AutoConfigureMockMvc
+@Sql(statements = {
+        "ALTER SEQUENCE category_id_seq RESTART WITH 1",
+"ALTER SEQUENCE task_seq RESTART WITH 1"},
+executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class TaskControllerIntegrationTest {
 
     @Autowired
@@ -77,21 +83,25 @@ public class TaskControllerIntegrationTest {
     @Test
     public void shouldGetAllTasks() throws Exception {
 
-        //taskService.saveTask(firstTask);
         mockMvc.perform(post("/api/v1/task").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(firstTask))).andExpect(status().isCreated());
         mockMvc.perform(post("/api/v1/task").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(secondTask))).andExpect(status().isCreated());
-        //taskService.saveTask(secondTask);
 
-        mockMvc.perform(get("/api/v1/task"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(2)))
-                .andExpect(jsonPath("$[0].id").exists())
-                .andExpect(jsonPath("$[0].title").value("Learn Tdd"))
-                .andExpect(jsonPath("$[1].title").value("Practice Tdd"))
-                .andExpect(jsonPath("$[0].category.id").exists())
-                .andExpect(jsonPath("$[0].category.label").value("Normal"))
-                .andExpect(jsonPath("$[1].category.label").value("Important"))
-                .andExpect(jsonPath("$[1].category.id").exists());
+
+        MvcResult result = mockMvc.perform(get("/api/v1/task"))
+                .andExpect(status().isOk()).andReturn();
+
+        String resultJson = result.getResponse().getContentAsString();
+        Task firstTaskResponse = objectMapper.readValue(resultJson, Task[].class)[0];
+        Task secondTaskResponse = objectMapper.readValue(resultJson, Task[].class)[1];
+
+        assertEquals(firstTask.getTitle(), firstTaskResponse.getTitle());
+        assertEquals(secondTask.getTitle(), secondTaskResponse.getTitle());
+        assertEquals(firstTask.getCategory().getLabel(), firstTaskResponse.getCategory().getLabel());
+        assertEquals(secondTask.getCategory().getLabel(), secondTaskResponse.getCategory().getLabel());
+        assertEquals(1L, firstTaskResponse.getId()) ;
+        assertEquals(2L, secondTaskResponse.getId());
+        assertEquals(firstTask.getDescription(), firstTaskResponse.getDescription());
+        assertEquals(secondTask.getDescription(), secondTaskResponse.getDescription());
     }
 
     @Test
@@ -100,9 +110,9 @@ public class TaskControllerIntegrationTest {
 
         mockMvc.perform(get("/api/v1/task/" + savedTask.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(4L))
+                .andExpect(jsonPath("$.id").value(savedTask.getId()))
                 .andExpect(jsonPath("$.title").value("Learn TDD"))
-                .andExpect(jsonPath("$.category.id").value(4L))
+                .andExpect(jsonPath("$.category.id").exists())
                 .andExpect(jsonPath("$.category.label").value("Started"));
     }
 }
