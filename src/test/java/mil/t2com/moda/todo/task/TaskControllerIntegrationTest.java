@@ -55,7 +55,6 @@ public class TaskControllerIntegrationTest {
 
     @BeforeEach
     void setUp() {
-
         started = new Category("Started");
         normal = new Category("Normal");
         important = new Category("Important");
