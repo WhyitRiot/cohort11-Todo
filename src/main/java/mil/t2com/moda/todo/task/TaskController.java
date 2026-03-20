@@ -31,12 +31,14 @@ public class TaskController {
 //    }
 
     @GetMapping("/all")
+    @ResponseStatus(HttpStatus.OK)
     public List<Task> findAllTasks() { return taskService.findAllTasks(); }
 
     // ADD with Tests for: GetById, Put, Delete
 
     // Example
     @GetMapping("/{taskId}")
+    @ResponseStatus(HttpStatus.OK)
     public Task findTask(@PathVariable Long taskId){
         return taskService.findTaskById(taskId);
     }

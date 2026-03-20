@@ -55,7 +55,6 @@ class TaskControllerTest {
     Category catThree;
 
     List<Task> allTasks;
-    ObjectMapper mapper;
 
     @BeforeEach
     void setUp(){
@@ -69,7 +68,6 @@ class TaskControllerTest {
         allTasks.add(taskOne);
         allTasks.add(taskTwo);
         allTasks.add(taskThree);
-        mapper = new ObjectMapper();
     }
 
     @Test
@@ -135,12 +133,12 @@ class TaskControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         String response = result.getResponse().getContentAsString();
-        List<Task> returnedTasks = mapper.readValue(response, new TypeReference<List<Task>>(){});
-
+        List<Task> returnedTasks = objectMapper.readValue(response, new TypeReference<List<Task>>(){});
 
         verify(taskService, only()).findAllTasks();
-        for (int i = 0; i < allTasks.size(); i++){
-            assertThat(returnedTasks.get(i).getTitle()).isEqualTo(allTasks.get(i).getTitle());
-        }
+//        for (int i = 0; i < allTasks.size(); i++){
+//            assertThat(returnedTasks.get(i).getTitle()).isEqualTo(allTasks.get(i).getTitle());
+//        }
+        assertThat(returnedTasks).usingRecursiveComparison().isEqualTo(allTasks);
     }
 }
