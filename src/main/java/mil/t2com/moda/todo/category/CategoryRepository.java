@@ -8,6 +8,11 @@ import java.util.Optional;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
-    Optional<Category> findByLabelOrId(String categoryLabel, Long id);
+    default Optional<Category> findByLabelOrId(String categoryLabel){
+        return this.findByLabel(categoryLabel);
+    };
+    default Optional<Category> findByLabelOrId(Long categoryId){
+        return this.findById(categoryId);
+    }
     Optional<Category> findByLabel(String categoryLabel);
 }

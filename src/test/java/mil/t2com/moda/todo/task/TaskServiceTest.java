@@ -3,6 +3,7 @@ package mil.t2com.moda.todo.task;
 import jakarta.transaction.Transactional;
 import mil.t2com.moda.todo.category.Category;
 import mil.t2com.moda.todo.category.CategoryRepository;
+import mil.t2com.moda.todo.category.CategoryService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,7 +19,7 @@ class TaskServiceTest {
     private TaskRepository taskRepository;
 
     @Mock
-    private CategoryRepository categoryRepository;
+    private CategoryService categoryService;
 
     @InjectMocks
     TaskService taskService;
@@ -35,11 +36,12 @@ class TaskServiceTest {
         Category newCategory = new Category("important");
         Task newTask = new Task("Learn about Mocks", "Learn about Inject mocks", false, newCategory);
         newTask.setId(1L);
+        newCategory.setId(1L);
 
         // Act
         when(taskRepository.save(newTask)).thenReturn(newTask);
-        when(categoryRepository.save(any(Category.class))).thenReturn(newCategory);
-        newCategory.setId(1L);
+
+        when(categoryService.resolveCategory(newTask.getCategory().getLabel())).thenReturn(newCategory);
 
         Task result = taskService.saveTask(newTask);
 
@@ -49,6 +51,7 @@ class TaskServiceTest {
         assertThat(result.getCategory().getLabel()).isEqualTo("important");
 
         verify(taskRepository, only()).save(newTask);
+        verify(categoryService, only()).resolveCategory(newTask.getCategory().getLabel());
     }
 
 }

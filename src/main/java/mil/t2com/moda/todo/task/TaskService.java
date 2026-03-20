@@ -12,26 +12,17 @@ import java.util.Optional;
 public class TaskService {
 
     private final TaskRepository taskRepository;
-    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
 
 
-    public TaskService(TaskRepository taskRepository, CategoryRepository categoryRepository) {
+    public TaskService(TaskRepository taskRepository, CategoryService categoryService) {
         this.taskRepository = taskRepository;
-        this.categoryRepository = categoryRepository;
+        this.categoryService = categoryService;
     }
 
     public Task saveTask(Task task) {
-        Optional<Category> category = categoryRepository.findByLabel(task.getCategory().getLabel());
-        if (category.isPresent()){
-            task.setCategory(category.get());
-            return taskRepository.save(task);
-        }else{
-            String label = task.getCategory().getLabel();
-             Category newCategory = categoryRepository.save(new Category(label));
-             Long categoryId = newCategory.getId();
-             task.getCategory().setId(categoryId);
-             return taskRepository.save(task);
-        }
+        task.setCategory(categoryService.resolveCategory(task.getCategory().getLabel()));
+        return taskRepository.save(task);
     }
 
     public Task findTaskById(Long id){

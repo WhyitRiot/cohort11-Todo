@@ -3,6 +3,7 @@ package mil.t2com.moda.todo.category;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.jdbc.CannotGetJdbcConnectionException;
 
 import java.util.Optional;
 
@@ -41,5 +42,17 @@ class CategoryRepositoryTest {
 
         assertThat(result.get().getLabel()).isEqualTo(newCategory.getLabel());
         System.out.println();
+    }
+
+    @Test
+    void shouldFindByLabelORId(){
+        Category newCategory = new Category("Important");
+        categoryRepository.save(newCategory);
+        Optional<Category> result = categoryRepository.findByLabelOrId(newCategory.getLabel());
+        Optional<Category> result2 = categoryRepository.findByLabelOrId(newCategory.getId());
+
+        assertThat(result.get().getId() == result2.get().getId());
+        assertThat(newCategory.getLabel() == result.get().getLabel());
+        assertThat(newCategory.getId() == result2.get().getId());
     }
 }
