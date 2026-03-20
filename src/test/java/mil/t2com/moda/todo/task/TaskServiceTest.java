@@ -4,11 +4,15 @@ import jakarta.transaction.Transactional;
 import mil.t2com.moda.todo.category.Category;
 import mil.t2com.moda.todo.category.CategoryRepository;
 import mil.t2com.moda.todo.category.CategoryService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -24,11 +28,40 @@ class TaskServiceTest {
     @InjectMocks
     TaskService taskService;
 
-    // Start using when refactoring
-//    @BeforeEach
-//    void setUp() {
-////        MockitoAnnotations.openMocks(this);
-//    }
+    Task taskOne;
+    Task taskTwo;
+    Task taskThree;
+
+    String labelOne;
+    String labelTwo;
+    String labelThree;
+
+    Category catOne;
+    Category catTwo;
+    Category catThree;
+
+    List<Task> allTasks;
+
+    /*
+        this.title = title;
+        this.description = description;
+        this.isComplete = isComplete;
+        this.category = category;
+     */
+
+    @BeforeEach
+    void setUp(){
+        catOne = new Category("Category One");
+        catTwo = new Category("Category Two");
+        catThree = new Category("Category Three");
+        taskOne = new Task("TaskOne", "Task One Description", false, catOne);
+        taskTwo = new Task("TaskTwo", "Task two Description", false, catTwo);
+        taskThree = new Task("TaskThree", "Task three Description", false, catThree);
+        allTasks = new ArrayList<Task>();
+        allTasks.add(taskOne);
+        allTasks.add(taskTwo);
+        allTasks.add(taskThree);
+    }
 
     @Test
     void shouldSaveNewTask() {
@@ -52,6 +85,29 @@ class TaskServiceTest {
 
         verify(taskRepository, only()).save(newTask);
         verify(categoryService, only()).resolveCategory(newTask.getCategory().getLabel());
+    }
+
+    @Test
+    void shouldGetAllTasks(){
+        //Repository save mock
+        when(taskRepository.save(taskOne)).thenReturn(taskOne);
+        when(taskRepository.save(taskTwo)).thenReturn(taskTwo);
+        when(taskRepository.save(taskThree)).thenReturn(taskThree);
+        when(taskRepository.findAll()).thenReturn(allTasks);
+
+        //Arrange
+        Task saveOne = taskService.saveTask(taskOne);
+        Task savedTwo = taskService.saveTask(taskTwo);
+        Task savedThree = taskService.saveTask(taskThree);
+
+        //Act
+        List<Task> result = taskService.findAllTasks();
+
+        for (int i = 0; i < allTasks.size(); i++){
+            assertThat(allTasks.get(i).getTitle() == result.get(i).getTitle());
+        }
+
+        verify(taskRepository, times(1)).findAll();
     }
 
 }

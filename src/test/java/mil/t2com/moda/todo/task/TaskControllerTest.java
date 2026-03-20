@@ -1,6 +1,7 @@
 package mil.t2com.moda.todo.task;
 
 import mil.t2com.moda.todo.category.Category;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -10,13 +11,21 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static aQute.bnd.annotation.headers.Category.json;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -36,6 +45,32 @@ class TaskControllerTest {
 
     @Captor
     ArgumentCaptor<Task> captor = ArgumentCaptor.forClass(Task.class);
+
+    Task taskOne;
+    Task taskTwo;
+    Task taskThree;
+
+    Category catOne;
+    Category catTwo;
+    Category catThree;
+
+    List<Task> allTasks;
+    ObjectMapper mapper;
+
+    @BeforeEach
+    void setUp(){
+        catOne = new Category("Category One");
+        catTwo = new Category("Category Two");
+        catThree = new Category("Category Three");
+        taskOne = new Task("TaskOne", "Task One Description", false, catOne);
+        taskTwo = new Task("TaskTwo", "Task two Description", false, catTwo);
+        taskThree = new Task("TaskThree", "Task three Description", false, catThree);
+        allTasks = new ArrayList<Task>();
+        allTasks.add(taskOne);
+        allTasks.add(taskTwo);
+        allTasks.add(taskThree);
+        mapper = new ObjectMapper();
+    }
 
     @Test
     void shouldSaveNewTask() throws Exception {
@@ -92,5 +127,20 @@ class TaskControllerTest {
 
         verify(taskService, only()).saveTask(any(Task.class));
     }
+    @Test
+    void shouldGetAllTasks() throws Exception{
+        when(taskService.findAllTasks()).thenReturn(allTasks);
 
+        MvcResult result = mockMvc.perform(get("/api/v1/task/all").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        String response = result.getResponse().getContentAsString();
+        List<Task> returnedTasks = mapper.readValue(response, new TypeReference<List<Task>>(){});
+
+
+        verify(taskService, only()).findAllTasks();
+        for (int i = 0; i < allTasks.size(); i++){
+            assertThat(returnedTasks.get(i).getTitle()).isEqualTo(allTasks.get(i).getTitle());
+        }
+    }
 }
