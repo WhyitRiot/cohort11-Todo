@@ -1,5 +1,6 @@
 package mil.t2com.moda.todo.category;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,16 +22,16 @@ class CategoryServiceTest {
     @InjectMocks
     CategoryService categoryService;
 
-    // Start using when refactoring
-//    @BeforeEach
-//    void setUp() {
-    ////        MockitoAnnotations.openMocks(this);
-//    }
+    Category newCategory;
+
+    @BeforeEach
+    void setup(){
+        newCategory = new Category("important");
+    }
 
     @Test
     void shouldSaveNewCategory() {
         // Arrange
-        Category newCategory = new Category("Delayed");
         newCategory.setId(1L);
 
         // Act
@@ -40,14 +41,13 @@ class CategoryServiceTest {
 
         // Assert
         assertThat(result.getId()).isEqualTo(1L);
-        assertThat(result.getLabel()).isEqualTo("Delayed");
+        assertThat(result.getLabel()).isEqualTo("important");
 
         verify(categoryRepository, only()).save(newCategory);
     }
 
     @Test
     void shouldFindCategoryByLabel(){
-        Category newCategory = new Category("Delayed");
         newCategory.setId(1L);
         when(categoryRepository.findByLabel(newCategory.getLabel())).thenReturn(Optional.of(newCategory));
 
@@ -61,13 +61,31 @@ class CategoryServiceTest {
     void shouldCreateCategoryIfNotExists(){
         //Arrange
         Category newCategory = new Category("important");
-        //when(categoryService.resolveCategory("important")).thenReturn(newCategory);
         when(categoryRepository.findByLabel("important")).thenReturn(Optional.empty());
         when(categoryRepository.save(any(Category.class))).thenReturn(newCategory);
         //Act
         Category checkCategory = categoryService.resolveCategory(newCategory.getLabel());
         //Assert
         assertThat(checkCategory.getLabel()).isEqualTo(newCategory.getLabel());
+
+
+        verify(categoryRepository, times(1)).findByLabel(anyString());
+        verify(categoryRepository, times(1)).save(any(Category.class));
     }
 
+    @Test
+    void shouldReturnCategoryIfExists(){
+        //Arrange
+        Category newCategory = new Category("important");
+        when(categoryRepository.findByLabel("important")).thenReturn(Optional.of(newCategory));
+
+        //Act
+        Category checkCategory = categoryService.resolveCategory(newCategory.getLabel());
+
+        //Assert
+        assertThat(checkCategory.getLabel()).isEqualTo(newCategory.getLabel());
+
+        verify(categoryRepository, times(1)).findByLabel(anyString());
+        verify(categoryRepository, times(0)).save(any(Category.class));
+    }
 }
