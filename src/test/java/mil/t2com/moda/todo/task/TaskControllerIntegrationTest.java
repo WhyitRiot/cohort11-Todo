@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Sql(statements = {
         "ALTER SEQUENCE category_id_seq RESTART WITH 1",
-"ALTER SEQUENCE task_seq RESTART WITH 1"},
+"ALTER SEQUENCE task_id_seq RESTART WITH 1"},
 executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class TaskControllerIntegrationTest {
 
