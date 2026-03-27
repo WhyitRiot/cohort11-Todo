@@ -44,3 +44,6 @@ postgres_data/
 
 ### Environment Variables ###
 *.env
+
+### Node / React ###
+node_modules/
