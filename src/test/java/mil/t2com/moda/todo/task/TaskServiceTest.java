@@ -55,8 +55,11 @@ class TaskServiceTest {
         catTwo = new Category("Category Two");
         catThree = new Category("Category Three");
         taskOne = new Task("TaskOne", "Task One Description", false, catOne);
+        taskOne.setId(1L);
         taskTwo = new Task("TaskTwo", "Task two Description", false, catTwo);
+        taskTwo.setId(2L);
         taskThree = new Task("TaskThree", "Task three Description", false, catThree);
+        taskThree.setId(3L);
         allTasks = new ArrayList<Task>();
         allTasks.add(taskOne);
         allTasks.add(taskTwo);
@@ -109,5 +112,18 @@ class TaskServiceTest {
 
         verify(taskRepository, times(1)).findAll();
     }
+    @Test
+    void shouldFindById(){
+        when(taskService.findTaskById(1L)).thenReturn(taskOne);
+        when(taskService.findTaskById(2L)).thenReturn(taskTwo);
+        when(taskService.findTaskById(3L)).thenReturn(taskThree);
 
+        Task foundTaskOne = taskService.findTaskById(1L);
+        Task foundTaskTwo = taskService.findTaskById(2L);
+        Task foundTaskThree = taskService.findTaskById(3L);
+
+        assertThat(foundTaskOne.getId()).isEqualTo(taskOne.getId());
+        assertThat(foundTaskTwo.getId()).isEqualTo(taskTwo.getId());
+        assertThat(foundTaskThree.getId()).isEqualTo(taskThree.getId());
+    }
 }

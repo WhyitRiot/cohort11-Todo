@@ -17,6 +17,7 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static aQute.bnd.annotation.headers.Category.json;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -62,8 +63,11 @@ class TaskControllerTest {
         catTwo = new Category("Category Two");
         catThree = new Category("Category Three");
         taskOne = new Task("TaskOne", "Task One Description", false, catOne);
+        taskOne.setId(1L);
         taskTwo = new Task("TaskTwo", "Task two Description", false, catTwo);
+        taskTwo.setId(2L);
         taskThree = new Task("TaskThree", "Task three Description", false, catThree);
+        taskThree.setId(3L);
         allTasks = new ArrayList<Task>();
         allTasks.add(taskOne);
         allTasks.add(taskTwo);
@@ -136,9 +140,38 @@ class TaskControllerTest {
         List<Task> returnedTasks = objectMapper.readValue(response, new TypeReference<List<Task>>(){});
 
         verify(taskService, only()).findAllTasks();
-//        for (int i = 0; i < allTasks.size(); i++){
-//            assertThat(returnedTasks.get(i).getTitle()).isEqualTo(allTasks.get(i).getTitle());
-//        }
         assertThat(returnedTasks).usingRecursiveComparison().isEqualTo(allTasks);
+    }
+    @Test
+    void shouldGetTaskById() throws Exception{
+        when(taskService.findTaskById(1L)).thenReturn(taskOne);
+        when(taskService.findTaskById(2L)).thenReturn(taskTwo);
+        when(taskService.findTaskById(3L)).thenReturn(taskThree);
+
+        //ACT
+        MvcResult resultOne = mockMvc.perform(get("/api/v1/task/1").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                        .andReturn();
+
+        MvcResult resultTwo = mockMvc.perform(get("/api/v1/task/2").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                        .andReturn();
+
+        MvcResult resultThree = mockMvc.perform(get("/api/v1/task/3").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                        .andReturn();
+
+
+        String resultJson = resultOne.getResponse().getContentAsString();
+        Task gotTaskOne = objectMapper.readValue(resultJson, Task.class);
+        resultJson = resultTwo.getResponse().getContentAsString();
+        Task gotTaskTwo = objectMapper.readValue(resultJson, Task.class);
+        resultJson = resultThree.getResponse().getContentAsString();
+        Task gotTaskThree = objectMapper.readValue(resultJson, Task.class);
+
+        //Assert
+        assertThat(gotTaskOne.getId()).isEqualTo(taskOne.getId());
+        assertThat(gotTaskTwo.getId()).isEqualTo(taskTwo.getId());
+        assertThat(gotTaskThree.getId()).isEqualTo(taskThree.getId());
     }
 }
