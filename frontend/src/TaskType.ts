@@ -4,7 +4,7 @@ export type Task = {
     isComplete: boolean
     category:{
         label: string,
-        id: number
+        id: number | null
     },
-    id: number
+    id: number | null
 }

@@ -1,11 +1,14 @@
-import axios from "axios";
+import axios, {type AxiosResponse} from "axios";
+import type {Task} from "./TaskType.ts";
 
-export async function getTasks() {
-    try {
-        const response = await axios.get("http:/localhost:8080/api/v1/task/all");
-        console.log(response)
-        return response.data;
-    } catch (error) {
-        console.error(error);
-    }
+const client = axios.create({
+    baseURL: "http://localhost:8080"
+})
+
+export async function getTasks(): Promise<Task[]> {
+    return client.get<Task[]>("/api/v1/task/all").then(r => r.data)
+}
+
+export async function postTask(task : Task) : Promise<AxiosResponse>{
+    return await client.post("/api/v1/task", task).then(r => r);
 }
