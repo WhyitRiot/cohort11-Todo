@@ -1,13 +1,37 @@
+import { useState } from "react";
 import type {Task} from "./TaskType.ts";
-import {TableCell, TableRow} from "@mui/material";
+import {Table, TableCell, TableRow} from "@mui/material";
 
 const TaskRow = ({task} : {task : Task}) => {
-
+    const [edit, setEdit] = useState(false);
     const handleClick = () =>{
-
+        setEdit(!edit);
+    }
+    const EditRow = () =>{
+        return(
+            <TableRow
+                key={task.id}
+                sx={{ '&:last-child td, &:last-child th' : {border : 0} }}>
+                <TableCell>
+                    <input type="text" placeholder={task.title}/>
+                </TableCell>
+                <TableCell>
+                    <input type="text" placeholder={task.description}/>
+                </TableCell>
+                <TableCell>
+                    <input type="text" placeholder={task.category.label}/>
+                </TableCell>
+                <TableCell>
+                    <input type="radio"/>
+                </TableCell>
+                <TableCell>
+                    <button onClick={handleClick}>Save</button>
+                </TableCell>
+            </TableRow>
+        )
     }
 
-    const rowData = () =>{
+    const RowData = () =>{
         return(
             <TableRow
                 key={task.id}
@@ -19,11 +43,12 @@ const TaskRow = ({task} : {task : Task}) => {
                 <TableCell >{task.description}</TableCell>
                 <TableCell >{task.category.label}</TableCell>
                 <TableCell >{task.isComplete ? "Yes" : "No"}</TableCell>
-                <TableCell><button>Edit</button></TableCell>
+                <TableCell><button onClick={handleClick}>Edit</button></TableCell>
                 {/*<TableCell align="right">{row.protein}</TableCell>*/}
             </TableRow>
         )
     }
+    return edit ? (<EditRow />) : (<RowData />)
 };
 
 export default TaskRow;
