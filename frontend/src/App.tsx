@@ -1,6 +1,6 @@
 
 import './App.css'
-import TaskItem from "./TaskItem.tsx";
+import TaskTable from "./TaskTable.tsx";
 import type {Task} from "./TaskType.ts";
 import {useEffect, useState} from "react";
 import * as client from "./APIClient.ts"
@@ -19,7 +19,7 @@ function App() {
 
     return (
         <>
-            <TaskItem tasks={data}/>
+            <TaskTable tasks={data}/>
         </>
     )
 }

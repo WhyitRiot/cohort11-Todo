@@ -1,5 +1,5 @@
 import {describe, it, expect, beforeAll, vi} from "vitest";
-import TaskItem from "../TaskItem.tsx";
+import TaskTable from "../TaskTable.tsx";
 import {render, screen, within} from "@testing-library/react";
 import type {Task} from "../TaskType.ts";
 import * as APIClient from "../APIClient.ts";
@@ -52,7 +52,7 @@ describe('task item', () => {
         ];
     })
     it('should display headers', () => {
-        render(<TaskItem tasks = {tasks}/>);
+        render(<TaskTable tasks = {tasks}/>);
         screen.logTestingPlaygroundURL();
         //expect(screen.queryByText(/Task/i)).toBeInTheDocument();
         //expect(screen.queryByText(/Description/i)).toBeInTheDocument();
