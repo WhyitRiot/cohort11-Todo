@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type {Task} from "./TaskType.ts";
-import {Table, TableCell, TableRow} from "@mui/material";
+import {TableCell, TableRow} from "@mui/material";
 
 const TaskRow = ({task} : {task : Task}) => {
     const [edit, setEdit] = useState(false);
@@ -31,7 +31,7 @@ const TaskRow = ({task} : {task : Task}) => {
         )
     }
 
-    const RowData = () =>{
+    const DataRow = () =>{
         return(
             <TableRow
                 key={task.id}
@@ -44,11 +44,10 @@ const TaskRow = ({task} : {task : Task}) => {
                 <TableCell >{task.category.label}</TableCell>
                 <TableCell >{task.isComplete ? "Yes" : "No"}</TableCell>
                 <TableCell><button onClick={handleClick}>Edit</button></TableCell>
-                {/*<TableCell align="right">{row.protein}</TableCell>*/}
             </TableRow>
         )
     }
-    return edit ? (<EditRow />) : (<RowData />)
+    return edit ? <EditRow /> : <DataRow />
 };
 
 export default TaskRow;

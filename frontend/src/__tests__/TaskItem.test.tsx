@@ -50,9 +50,6 @@ describe('task item', () => {
     it('should display headers', () => {
         render(<TaskTable tasks = {tasks}/>);
         screen.logTestingPlaygroundURL();
-        //expect(screen.queryByText(/Task/i)).toBeInTheDocument();
-        //expect(screen.queryByText(/Description/i)).toBeInTheDocument();
-        //expect(screen.queryByText(/Category/i)).toBeInTheDocument();
         const tableItems = screen.getAllByRole('row');
         expect(tableItems.length).toEqual(4);
     });
