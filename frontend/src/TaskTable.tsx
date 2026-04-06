@@ -16,12 +16,6 @@ type taskRow = {
 
 const TaskTable = (props: {tasks: Task[]}) => {
     const tasks = props.tasks;
-    const columns: GridColDef[] = [
-        {field: 'title', headerName: "Task", flex: 1},
-        {field: 'description', headerName: "Description", flex: 1},
-        {field: 'category', headerName: "Category", flex: 1},
-        {field: 'isComplete', headerName: "Status", flex: 1}
-    ]
         return (
             <>
                 <TableContainer component={Paper}>

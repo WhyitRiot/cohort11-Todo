@@ -59,7 +59,15 @@ describe('task item', () => {
         //expect(screen.queryByText(/Category/i)).toBeInTheDocument();
         const tableItems = screen.getAllByRole('row');
         expect(tableItems.length).toEqual(4);
+    });
 
+    it('should display button', () => {
+        render(<TaskTable tasks={tasks}/>);
+        screen.logTestingPlaygroundURL();
+        const tableItems = screen.getAllByRole('row');
+        for (let i = 1; i<tableItems.length; i++){
+            expect(within(tableItems[i]).getByRole('button', { name: /edit/i })).toBeInTheDocument();
+        }
     });
 //     beforeAll(()=>{
 //         task= {
