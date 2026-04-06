@@ -1,26 +1,22 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import type {Task} from "./TaskType.ts"
 import * as client from "./APIClient.ts"
-type TaskContext = {
+type TaskContextType = {
     tasks : Task[]
     error: string | null
     loading: boolean
     addTask: (task: Task) => Promise<void>,
     updateTask: (task: Task) => Promise<void>
-    deleteTask: (id: Number) => Promise<void>
+    deleteTask: (id: number) => Promise<void>
     fetchTasks: () => Promise<void>
 }
 
-const TaskContext = createContext<TaskContext | undefined>(undefined);
+export const TaskContext = createContext<TaskContextType | undefined>(undefined);
 export const TaskContextProvider = ({children} :{children : React.ReactNode}) => {
 
     const [tasks, setTasks] = useState<Task[]>([])
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
-
-    useEffect(()=>{
-        fetchTasks();
-    },[])
 
     const fetchTasks = async () =>{
         setLoading(true);
@@ -66,6 +62,9 @@ export const TaskContextProvider = ({children} :{children : React.ReactNode}) =>
             setLoading(false);
         }
     }
+    useEffect(()=>{
+        fetchTasks();
+    },[])
 
     return (
         <TaskContext.Provider value={{tasks, loading, error, addTask, updateTask, deleteTask, fetchTasks}}>

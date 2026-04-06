@@ -1,0 +1,32 @@
+import { describe, vi, it, expect } from "vitest";
+import * as client from "../APIClient.ts"
+import {render, waitFor, screen} from "@testing-library/react";
+import {TaskContextProvider} from "../TaskContextProvider.tsx";
+import TaskTable from "../TaskTable.tsx";
+
+describe('task context', () => {
+    it('should show data', async () => {
+        vi.mock("../APIClient.ts");
+        vi.mocked(client.getTasks).mockResolvedValue([
+            {
+                title: "Learn TDD",
+                description: "Testing tables",
+                isComplete: false,
+                category:{
+                    label: "Test",
+                    id : 1
+                },
+                id: 1
+            }
+        ]);
+        render(
+            <TaskContextProvider>
+                <TaskTable/>
+            </TaskContextProvider>
+        );
+        await waitFor(()=>{
+            expect(screen.getAllByRole('row')).toHaveLength(2);
+        })
+    });
+
+});

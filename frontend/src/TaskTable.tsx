@@ -4,7 +4,8 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import TaskRow from './TaskRow.tsx'
 import type {Task} from "./TaskType.ts";
 import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
-import {useState} from "react";
+import {useContext, useState} from "react";
+import {TaskContext} from "./TaskContextProvider.tsx";
 
 type taskRow = {
     id: number;
@@ -14,8 +15,10 @@ type taskRow = {
     isComplete: string
 }
 
-const TaskTable = (props: {tasks: Task[]}) => {
-    const tasks = props.tasks;
+const TaskTable = () => {
+    const context = useContext(TaskContext);
+    if (!context) throw new Error("Outside of provider");
+    const {tasks} = context;
         return (
             <>
                 <TableContainer component={Paper}>

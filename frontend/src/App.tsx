@@ -4,6 +4,7 @@ import TaskTable from "./TaskTable.tsx";
 import type {Task} from "./TaskType.ts";
 import {useEffect, useState} from "react";
 import * as client from "./APIClient.ts"
+import {TaskContextProvider} from "./TaskContextProvider.tsx";
 
 function App() {
     const [data, setData] = useState<Task[]>([]);
@@ -19,7 +20,9 @@ function App() {
 
     return (
         <>
-            <TaskTable tasks={data}/>
+            <TaskContextProvider>
+                <TaskTable />
+            </TaskContextProvider>
         </>
     )
 }

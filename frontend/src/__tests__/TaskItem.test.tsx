@@ -1,7 +1,9 @@
 import {describe, it, expect, beforeAll, vi} from "vitest";
 import TaskTable from "../TaskTable.tsx";
-import {fireEvent, render, screen, within} from "@testing-library/react";
+import {fireEvent, render, screen, waitFor, within} from "@testing-library/react";
 import type {Task} from "../TaskType.ts";
+import * as client from "../APIClient.ts";
+import {TaskContextProvider} from "../TaskContextProvider.tsx";
 
 let task: Task;
 let taskTwo: Task;
@@ -46,16 +48,18 @@ describe('task item', () => {
             taskTwo,
             taskThree
         ];
+        vi.mock("../APIClient.ts");
+        vi.mocked(client.getTasks).mockResolvedValue(tasks);
     })
-    it('should display headers', () => {
-        render(<TaskTable tasks = {tasks}/>);
-        screen.logTestingPlaygroundURL();
-        const tableItems = screen.getAllByRole('row');
-        expect(tableItems.length).toEqual(4);
+    it('should display headers', async () => {
+        render(<TaskContextProvider><TaskTable /></TaskContextProvider>);
+        await waitFor(() =>{
+            expect(screen.getAllByRole('row')).toHaveLength(4);
+        })
     });
 
     it('should display button', () => {
-        render(<TaskTable tasks={tasks}/>);
+        render(<TaskContextProvider><TaskTable /></TaskContextProvider>);
         screen.logTestingPlaygroundURL();
         let tableItems = screen.getAllByRole('row');
         for (let i = 1; i<tableItems.length; i++){
@@ -65,7 +69,7 @@ describe('task item', () => {
 
     describe('task item button', () => {
         it('should change row to input', () => {
-            render(<TaskTable tasks={tasks}/>)
+            render(<TaskContextProvider><TaskTable /></TaskContextProvider>);
             let tableItems = screen.getAllByRole('row');
             for (let i = 1; i<tableItems.length; i++){
                 let editButton = within(tableItems[i]).getByRole('button', { name: /edit/i });
