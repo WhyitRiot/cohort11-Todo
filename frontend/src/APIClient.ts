@@ -27,3 +27,11 @@ export async function getTasks(): Promise<Task[]> {
 export async function postTask(task : Task) : Promise<AxiosResponse>{
     return await client.post("/api/v1/task", task).then(r => r);
 }
+
+export async function putTask(task : Task) : Promise<AxiosResponse>{
+    return await client.put(`/api/v1/task/${task.id}`, task).then(r => r);
+}
+
+export async function deleteTask(id : Number) : Promise<AxiosResponse>{
+    return await client.delete(`/api/v1/task/${id}`).then(r => r);
+}
