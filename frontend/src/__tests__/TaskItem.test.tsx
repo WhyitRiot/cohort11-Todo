@@ -1,10 +1,12 @@
 import {describe, it, expect, beforeAll, vi} from "vitest";
 import TaskTable from "../TaskTable.tsx";
-import {fireEvent, render, screen, waitFor, within} from "@testing-library/react";
+import {act, fireEvent, render, screen, waitFor, within} from "@testing-library/react";
 import type {Task} from "../TaskType.ts";
 import * as client from "../APIClient.ts";
 import {TaskContextProvider} from "../TaskContextProvider.tsx";
 
+
+vi.mock("../APIClient.ts");
 let task: Task;
 let taskTwo: Task;
 let taskThree: Task;
@@ -21,6 +23,7 @@ describe('task item', () => {
                 id : 1
             },
             id: 1 }
+
         taskTwo= {
             title: "Build React App",
             description: "Create frontend for task manager",
@@ -42,13 +45,11 @@ describe('task item', () => {
             },
             id: 3
         };
-
         tasks = [
             task,
             taskTwo,
             taskThree
         ];
-        vi.mock("../APIClient.ts");
         vi.mocked(client.getTasks).mockResolvedValue(tasks);
     })
     it('should display headers', async () => {
@@ -58,18 +59,23 @@ describe('task item', () => {
         })
     });
 
-    it('should display button', () => {
+    it('should display button', async () => {
         render(<TaskContextProvider><TaskTable /></TaskContextProvider>);
         screen.logTestingPlaygroundURL();
-        let tableItems = screen.getAllByRole('row');
-        for (let i = 1; i<tableItems.length; i++){
-            expect(within(tableItems[i]).getByRole('button', { name: /edit/i })).toBeInTheDocument();
-        }
+        let tableItems;
+        await waitFor(()=>{
+            tableItems = screen.getAllByRole('row');
+            for (let i = 1; i<tableItems.length; i++){
+                expect(within(tableItems[i]).getByRole('button', { name: /edit/i })).toBeInTheDocument();
+            }
+        })
     });
 
     describe('task item button', () => {
         it('should change row to input', () => {
-            render(<TaskContextProvider><TaskTable /></TaskContextProvider>);
+            act(()=>{
+                render(<TaskContextProvider><TaskTable /></TaskContextProvider>);
+            })
             let tableItems = screen.getAllByRole('row');
             for (let i = 1; i<tableItems.length; i++){
                 let editButton = within(tableItems[i]).getByRole('button', { name: /edit/i });

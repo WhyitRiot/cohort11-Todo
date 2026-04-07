@@ -4,9 +4,9 @@ import {render, waitFor, screen} from "@testing-library/react";
 import {TaskContextProvider} from "../TaskContextProvider.tsx";
 import TaskTable from "../TaskTable.tsx";
 
+vi.mock("../APIClient.ts");
 describe('task context', () => {
     it('should show data', async () => {
-        vi.mock("../APIClient.ts");
         vi.mocked(client.getTasks).mockResolvedValue([
             {
                 title: "Learn TDD",
