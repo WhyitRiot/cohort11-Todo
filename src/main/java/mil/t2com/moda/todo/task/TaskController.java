@@ -44,4 +44,8 @@ public class TaskController {
         return taskService.findTaskById(taskId);
     }
 
+    @PutMapping("/{taskId}")
+    @ResponseStatus(HttpStatus.OK)
+    public Task updateTask(@PathVariable Long taskId, @RequestBody Task task){return taskService.updateTaskById(taskId, task);}
+
 }

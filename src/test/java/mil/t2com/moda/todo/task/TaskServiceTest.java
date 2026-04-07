@@ -126,4 +126,16 @@ class TaskServiceTest {
         assertThat(foundTaskTwo.getId()).isEqualTo(taskTwo.getId());
         assertThat(foundTaskThree.getId()).isEqualTo(taskThree.getId());
     }
+    @Test
+    void shouldUpdateTask(){
+        Task updateTask = new Task("Grape", "Mustard", false, new Category("Greese"));
+        updateTask.setId(1L);
+        updateTask.getCategory().setId(1L);
+        when(taskRepository.getReferenceById(1L)).thenReturn(taskOne);
+        when(taskRepository.save(any(Task.class))).thenReturn(updateTask);
+
+        Task updatedTask = taskService.updateTaskById(1L, updateTask);
+
+        assertThat(updatedTask.getId()).isEqualTo(1L);
+    }
 }

@@ -26,8 +26,7 @@ import static org.hamcrest.Matchers.matchesPattern;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -173,5 +172,26 @@ class TaskControllerTest {
         assertThat(gotTaskOne.getId()).isEqualTo(taskOne.getId());
         assertThat(gotTaskTwo.getId()).isEqualTo(taskTwo.getId());
         assertThat(gotTaskThree.getId()).isEqualTo(taskThree.getId());
+    }
+    @Test
+    void shouldUpdateTask() throws Exception{
+        Task update = new Task("Mustard", "Greese", false, new Category("Food"));
+        when(taskService.findTaskById(1L)).thenReturn(update);
+        when(taskService.updateTaskById(anyLong(), any(Task.class))).thenReturn(update);
+        update.setId(1L);
+        update.getCategory().setId(1L);
+
+        mockMvc.perform(put("/api/v1/task/1").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(update)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        MvcResult resultOne = mockMvc.perform(get("/api/v1/task/1").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String resultJson = resultOne.getResponse().getContentAsString();
+        Task gotTaskOne = objectMapper.readValue(resultJson, Task.class);
+        assertThat(gotTaskOne.getId()).isEqualTo(update.getId());
+        assertThat(gotTaskOne.getTitle()).isEqualTo(update.getTitle());
     }
 }

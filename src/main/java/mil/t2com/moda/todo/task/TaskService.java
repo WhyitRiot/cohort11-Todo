@@ -33,5 +33,14 @@ public class TaskService {
         return taskRepository.findAll();
     }
 
+    public Task updateTaskById(Long id, Task task) {
+        Task foundTask = taskRepository.getReferenceById(id);
+        foundTask.setCategory(task.getCategory());
+        foundTask.setDescription(task.getDescription());
+        foundTask.setTitle(task.getTitle());
+        foundTask.setIsComplete(task.getIsComplete());
+        return taskRepository.save(foundTask);
+    }
+
     // ADD with Tests for: GetById, Put, Delete
 }
