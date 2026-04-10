@@ -1,5 +1,5 @@
 import axios, {type AxiosResponse} from "axios";
-import type {Task} from "./TaskType.ts";
+import type {Task, Category} from "./TaskType.ts";
 
 const client = axios.create({
     //baseURL: "http://localhost:8080"
