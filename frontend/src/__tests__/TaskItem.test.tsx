@@ -55,28 +55,30 @@ describe('task item', () => {
     it('should display headers', async () => {
         render(<TaskContextProvider><TaskTable /></TaskContextProvider>);
         await waitFor(() =>{
-            expect(screen.getAllByRole('row')).toHaveLength(4);
+            expect(screen.getAllByRole('row')).not.toEqual(undefined);
         })
+        expect(screen.getAllByRole('row')).toHaveLength(4);
     });
 
     it('should display button', async () => {
         render(<TaskContextProvider><TaskTable /></TaskContextProvider>);
-        screen.logTestingPlaygroundURL();
-        let tableItems;
         await waitFor(()=>{
-            tableItems = screen.getAllByRole('row');
-            for (let i = 1; i<tableItems.length; i++){
-                expect(within(tableItems[i]).getByRole('button', { name: /edit/i })).toBeInTheDocument();
-            }
+            const tableItems = screen.getAllByRole('row');
+            expect(tableItems.length).toBeGreaterThan(1);
+
         })
+        const tableItems = screen.getAllByRole('row');
+        for (let i = 1; i<tableItems.length; i++){
+            expect(within(tableItems[i]).getByRole('button', { name: /edit/i })).toBeInTheDocument();
+        }
+        screen.logTestingPlaygroundURL();
     });
 
     describe('task item button', () => {
-        it('should change row to input', () => {
-            act(()=>{
-                render(<TaskContextProvider><TaskTable /></TaskContextProvider>);
-            })
-            let tableItems = screen.getAllByRole('row');
+        it('should change row to input', async () => {
+            render(<TaskContextProvider><TaskTable /></TaskContextProvider>);
+
+            let tableItems = await screen.findAllByRole('row');
             for (let i = 1; i<tableItems.length; i++){
                 let editButton = within(tableItems[i]).getByRole('button', { name: /edit/i });
                 //Click and make sure inputs appear
