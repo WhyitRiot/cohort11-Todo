@@ -21,7 +21,7 @@ const DataRow = ({task, handleEdit} :{task: Task, handleEdit:()=>void}) =>{
     )
 }
 
-const EditRow = ({task, form, checked, handleSave, handleChange, handleClick} :{task : Task, form : TaskEdit, checked: boolean, handleSave : ()=>void, handleChange: (e: any)=>void, handleClick: (e : ChangeEvent<HTMLInputElement, Element>) => void}) =>{
+const EditRow = ({task, form, handleSave, handleChange, handleClick, handleDelete} :{task : Task, form : TaskEdit, handleSave : ()=>void, handleChange: (e: any)=>void, handleClick: (e : ChangeEvent<HTMLInputElement, Element>) => void, handleDelete: ()=>void}) =>{
     return(
         <TableRow
             key={task.id}
@@ -41,6 +41,9 @@ const EditRow = ({task, form, checked, handleSave, handleChange, handleClick} :{
             <TableCell>
                 <button onClick={handleSave}>Save</button>
             </TableCell>
+            <TableCell>
+                <button onClick={handleDelete}>Delete</button>
+            </TableCell>
         </TableRow>
     )
 }
@@ -48,15 +51,15 @@ const EditRow = ({task, form, checked, handleSave, handleChange, handleClick} :{
 const TaskRow = ({task}: { task: Task }) => {
     const context = useContext(TaskContext);
     if (!context) throw new Error("Outside of provider");
-    const {updateTask} = context;
+    const {updateTask, deleteTask} = context;
 
-    const {edit, form, checked, handleClick, handleEdit, handleChange, handleSave } = useTaskForm(task, updateTask);
+    const {edit, form, handleDelete, handleClick, handleEdit, handleChange, handleSave } = useTaskForm(task, updateTask, deleteTask);
 
     return edit ?
         <EditRow
             task={task}
             form={form}
-            checked={checked}
+            handleDelete={handleDelete}
             handleSave={handleSave}
             handleChange={handleChange}
             handleClick={handleClick}

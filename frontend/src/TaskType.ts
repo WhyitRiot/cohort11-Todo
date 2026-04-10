@@ -1,6 +1,6 @@
 export type Category = {
     label: string,
-    id: number | null
+    id?: number
 }
 
 export type Task = {
@@ -8,7 +8,7 @@ export type Task = {
     description: string,
     isComplete: boolean
     category: Category
-    id: number | null
+    id?: number
 }
 
 export type TaskEdit = {

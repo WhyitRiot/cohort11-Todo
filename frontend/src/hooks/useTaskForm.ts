@@ -1,10 +1,9 @@
 import {type ChangeEvent, useState} from "react";
 import type {Task, TaskEdit} from "../TaskType.ts";
 
-export const useTaskForm = (task : Task, onSave : (updatedTask : Task) => Promise<void>)=>
+export const useTaskForm = (task : Task, onSave : (updatedTask : Task) => Promise<void>, onDelete : (id : number) => Promise<void>)=>
 {
     const [edit, setEdit] = useState(false);
-    const [checked, setChecked] = useState<boolean>(task.isComplete);
 
     const handleEdit = () => {
         setEdit(!edit);
@@ -46,10 +45,17 @@ export const useTaskForm = (task : Task, onSave : (updatedTask : Task) => Promis
         setEdit(false);
     }
 
+    const handleDelete = async () =>{
+        // TODO - add delete
+        // if (!task.id) return;
+        // await onDelete(task.id);
+        setEdit(false);
+    }
+
     return {
         edit,
         form,
-        checked,
+        handleDelete,
         handleClick,
         handleEdit,
         handleChange,

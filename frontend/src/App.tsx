@@ -5,6 +5,7 @@ import type {Task} from "./TaskType.ts";
 import {useEffect, useState} from "react";
 import * as client from "./APIClient.ts"
 import {TaskContextProvider} from "./TaskContextProvider.tsx";
+import AddForm from "./AddForm.tsx";
 
 function App() {
     const [data, setData] = useState<Task[]>([]);
@@ -22,6 +23,7 @@ function App() {
         <>
             <TaskContextProvider>
                 <TaskTable />
+                <AddForm/>
             </TaskContextProvider>
         </>
     )

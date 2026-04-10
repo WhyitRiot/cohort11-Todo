@@ -30,6 +30,7 @@ const TaskTable = () => {
                                 <TableCell>Category</TableCell>
                                 <TableCell>Status</TableCell>
                                 <TableCell></TableCell>
+                                <TableCell></TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
