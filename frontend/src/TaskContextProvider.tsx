@@ -29,6 +29,7 @@ export const TaskContextProvider = ({children} :{children : React.ReactNode}) =>
     const addTask = async (task : Task) =>{
         setLoading(true);
         await client.postTask(task);
+        await fetchTasks();
         setLoading(false);
     }
 
