@@ -36,7 +36,7 @@ public class TaskService {
     public Task updateTaskById(Long id, Task task) {
         Task foundTask = taskRepository.getReferenceById(id);
         if (!foundTask.getCategory().getLabel().equals(task.getCategory().getLabel())){
-            categoryService.saveCategory(task.getCategory());
+            task.setCategory(categoryService.resolveCategory(task.getCategory().getLabel()));
         }
         foundTask.setCategory(task.getCategory());
         foundTask.setDescription(task.getDescription());
