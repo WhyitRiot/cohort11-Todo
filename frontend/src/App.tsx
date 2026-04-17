@@ -1,29 +1,18 @@
-
-import './App.css'
-import TaskTable from "./TaskTable.tsx";
-import type {Task} from "./TaskType.ts";
-import {useEffect, useState} from "react";
-import * as client from "./APIClient.ts"
-import {TaskContextProvider} from "./TaskContextProvider.tsx";
-import AddForm from "./AddForm.tsx";
+import Tasks from "./pages/Tasks.tsx";
+import {TaskContextProvider} from "./context/TaskContextProvider.tsx";
+import {Route, Routes} from "react-router-dom";
+import NavBar from "./components/NavBar.tsx";
 
 function App() {
-    const [data, setData] = useState<Task[]>([]);
-
-    const fetchData = async () =>{
-        const data = await client.getTasks();
-        setData(data);
-    }
-
-    useEffect(()=>{
-        fetchData();
-    }, [])
 
     return (
         <>
             <TaskContextProvider>
-                <TaskTable />
-                <AddForm/>
+                <NavBar />
+                <Routes>
+                    <Route path={"/"} element={<Tasks/>}></Route>
+                    <Route path={"/tasks"} element={<Tasks/>}></Route>
+                </Routes>
             </TaskContextProvider>
         </>
     )

@@ -33,4 +33,16 @@ class TaskRepositoryTest {
         assertThat(result.get().getCategory()).isEqualTo(newTask.getCategory());
         assertThat(result.get()).isEqualTo(newTask);
     }
+
+    @Test
+    void shouldDeleteATask(){
+        //Arrange
+        Task deleteThis = new Task("This", "Test", false, new Category("What"));
+        Task savedTask = taskRepository.save(deleteThis);
+        //ACT
+        taskRepository.deleteById(savedTask.getId());
+        Optional<Task> getTask = taskRepository.findById(savedTask.getId());
+        //Assert
+        assertThat(getTask).isEmpty();
+    }
 }

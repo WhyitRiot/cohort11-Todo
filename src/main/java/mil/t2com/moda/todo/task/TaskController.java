@@ -48,4 +48,9 @@ public class TaskController {
     @ResponseStatus(HttpStatus.OK)
     public Task updateTask(@PathVariable Long taskId, @RequestBody Task task){return taskService.updateTaskById(taskId, task);}
 
+    @DeleteMapping("/{taskId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteTask(@PathVariable Long taskId){
+        this.taskService.deleteById(taskId);
+    }
 }

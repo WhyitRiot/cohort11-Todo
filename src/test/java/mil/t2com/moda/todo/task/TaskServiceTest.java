@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -137,5 +138,16 @@ class TaskServiceTest {
         Task updatedTask = taskService.updateTaskById(1L, updateTask);
 
         assertThat(updatedTask.getId()).isEqualTo(1L);
+    }
+    @Test
+    void shouldDeleteTask(){
+        Task deleteThis = new Task("Wish", "Granted", false, new Category("Grummy"));
+        deleteThis.getCategory().setId(1L);
+        deleteThis.setId(1L);
+        when(taskRepository.save(deleteThis)).thenReturn(deleteThis);
+        Task saved = taskRepository.save(deleteThis);
+        taskRepository.deleteById(saved.getId());
+
+        verify(taskRepository, times(1)).deleteById(1L);
     }
 }

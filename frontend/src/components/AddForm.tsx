@@ -3,8 +3,8 @@ import {Box, Button, Checkbox, TextField} from "@mui/material";
 import {type FieldValues, useForm} from "react-hook-form";
 import {type InferType, object, string} from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
-import type {Task} from "./TaskType.ts";
-import {TaskContext} from "./TaskContextProvider.tsx";
+import type {Task} from "../utilities/TaskType.ts";
+import {TaskContext} from "../context/TaskContextProvider.tsx";
 
 const AddForm = () => {
     const context = useContext(TaskContext);
@@ -55,7 +55,7 @@ const AddForm = () => {
                 autoComplete={"off"}
                 onSubmit={ handleSubmit(data => onSubmit(data))}
             >
-                <div>
+                <div className={"flex justify-center items-center"}>
                     <TextField
                         required
                         id={"outlined-required"}

@@ -1,5 +1,5 @@
 import {type ChangeEvent, useState} from "react";
-import type {Task, TaskEdit} from "../TaskType.ts";
+import type {Task, TaskEdit} from "../utilities/TaskType.ts";
 
 export const useTaskForm = (task : Task, onSave : (updatedTask : Task) => Promise<void>, onDelete : (id : number) => Promise<void>)=>
 {
@@ -46,9 +46,9 @@ export const useTaskForm = (task : Task, onSave : (updatedTask : Task) => Promis
     }
 
     const handleDelete = async () =>{
-        // TODO - add delete
-        // if (!task.id) return;
-        // await onDelete(task.id);
+        if (task.id){
+            await onDelete(task.id);
+        }
         setEdit(false);
     }
 

@@ -194,4 +194,21 @@ class TaskControllerTest {
         assertThat(gotTaskOne.getId()).isEqualTo(update.getId());
         assertThat(gotTaskOne.getTitle()).isEqualTo(update.getTitle());
     }
+    @Test
+    void shouldDeleteTask() throws Exception {
+        Task task = new Task("Mustard", "Greese", false, new Category("Food"));
+        task.setId(1L);
+        task.getCategory().setId(1L);
+        when(taskService.findTaskById(1L)).thenReturn(null);
+        when(taskService.saveTask(task)).thenReturn(task);
+
+        mockMvc.perform(delete("/api/v1/task/1")).andExpect(status().isOk());
+
+        MvcResult found = mockMvc.perform(get("/api/v1/task/1").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String resultJson = found.getResponse().getContentAsString();
+        assertThat(resultJson).isEqualTo("");
+    }
 }

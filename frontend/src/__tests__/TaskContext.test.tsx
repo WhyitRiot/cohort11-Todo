@@ -1,8 +1,8 @@
 import { describe, vi, it, expect } from "vitest";
-import * as client from "../APIClient.ts"
+import * as client from "../utilities/APIClient.ts"
 import {render, waitFor, screen} from "@testing-library/react";
-import {TaskContextProvider} from "../TaskContextProvider.tsx";
-import TaskTable from "../TaskTable.tsx";
+import {TaskContextProvider} from "../context/TaskContextProvider.tsx";
+import TaskTable from "../components/TaskTable.tsx";
 
 vi.mock("../APIClient.ts");
 describe('task context', () => {

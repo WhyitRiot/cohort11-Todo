@@ -1,8 +1,8 @@
 import {useState, type ChangeEvent, useEffect, useContext} from "react";
-import type {Task, TaskEdit} from "./TaskType.ts";
-import {useTaskForm} from "./hooks/useTaskForm.ts";
+import type {Task, TaskEdit} from "../utilities/TaskType.ts";
+import {useTaskForm} from "../hooks/useTaskForm.ts";
 import {Checkbox, TableCell, TableRow} from "@mui/material";
-import {TaskContext} from "./TaskContextProvider.tsx";
+import {TaskContext} from "../context/TaskContextProvider.tsx";
 
 const DataRow = ({task, handleEdit} :{task: Task, handleEdit:()=>void}) =>{
     return(

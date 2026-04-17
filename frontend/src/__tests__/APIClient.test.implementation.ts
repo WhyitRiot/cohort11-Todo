@@ -1,6 +1,6 @@
 import {describe, it, expect} from "vitest";
-import type {Task} from "../TaskType.ts";
-import * as APIClient from "../APIClient.ts";
+import type {Task} from "../utilities/TaskType.ts";
+import * as APIClient from "../utilities/APIClient.ts";
 import type {AxiosResponse} from "axios";
 
 describe("API client", ()=>{

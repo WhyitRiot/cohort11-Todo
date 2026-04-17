@@ -2,10 +2,10 @@
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 
 import TaskRow from './TaskRow.tsx'
-import type {Task} from "./TaskType.ts";
+import type {Task} from "../utilities/TaskType.ts";
 import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
 import {useContext, useState} from "react";
-import {TaskContext} from "./TaskContextProvider.tsx";
+import {TaskContext} from "../context/TaskContextProvider.tsx";
 
 type taskRow = {
     id: number;

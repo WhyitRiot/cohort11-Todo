@@ -1,8 +1,8 @@
-import type {Task} from "../TaskType.ts";
+import type {Task} from "../utilities/TaskType.ts";
 import {beforeAll, afterEach, afterAll, describe, it, expect} from "vitest";
 import {setupServer, SetupServerApi} from "msw/node";
 import {http, HttpResponse} from "msw";
-import * as client from "../APIClient.ts";
+import * as client from "../utilities/APIClient.ts";
 
 describe('Task service', () => {
     let server : SetupServerApi;

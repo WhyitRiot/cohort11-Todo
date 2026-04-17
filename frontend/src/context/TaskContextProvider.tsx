@@ -1,6 +1,6 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
-import type {Task} from "./TaskType.ts"
-import * as client from "./APIClient.ts"
+import type {Task} from "../utilities/TaskType.ts"
+import * as client from "../utilities/APIClient.ts"
 
 type TaskContextType = {
     tasks : Task[]
