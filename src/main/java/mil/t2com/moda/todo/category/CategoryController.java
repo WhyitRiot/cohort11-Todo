@@ -23,7 +23,17 @@ public class CategoryController {
 
     @GetMapping()
     public List<Category> getAllCategories() {
-        return null;
+        return this.categoryService.findAllCategories();
+    }
+
+    @PutMapping("/{categoryId}")
+    public Category updateCategory(@PathVariable Long categoryId, @RequestBody Category category){
+        return this.categoryService.updateCategory(categoryId, category);
+    }
+
+    @DeleteMapping("/{categoryId}")
+    public void deleteCategory(@PathVariable Long categoryId){
+        this.categoryService.deleteCategory(categoryId);
     }
 
     // ADD with Tests for: GetById, Put, Delete
