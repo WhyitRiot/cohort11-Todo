@@ -28,7 +28,7 @@ const NavBar = () => {
                             <Link className={"block py-2 px-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 md:dark:hover:bg-transparent"} to="/tasks">Tasks</Link>
                         </li>
                         <li className={"p-1 border border-gray-700 rounded-sm"}>
-                            <Link className={"block py-2 px-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 md:dark:hover:bg-transparent"} to="/">Category</Link>
+                            <Link className={"block py-2 px-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 md:dark:hover:bg-transparent"} to="/categories">Category</Link>
                         </li>
                     </ul>
                 </div>
