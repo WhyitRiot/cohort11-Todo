@@ -35,3 +35,17 @@ export async function putTask(task : Task) : Promise<AxiosResponse>{
 export async function deleteTask(id : Number) : Promise<AxiosResponse>{
     return await client.delete(`/api/v1/task/${id}`).then(r => r);
 }
+
+export async function getCategories(): Promise<Category[]> {
+    return await client.get<Category[]>("/api/v1/category").then(r => r.data);
+}
+
+export async function postCategory(category: Category) : Promise<AxiosResponse>{
+    return await client.post("api/v1/category", category).then(r => r);
+}
+export async function putCategory(id: Number, category: Category) : Promise<AxiosResponse>{
+    return await client.put(`/api/v1/category/${id}`, category).then(r => r);
+}
+export async function deleteCategory(id: Number) : Promise<AxiosResponse>{
+    return await client.delete(`/api/v1/category/${id}`).then(r => r);
+}
